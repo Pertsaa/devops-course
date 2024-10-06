@@ -1,5 +1,5 @@
 const server = Bun.serve({
-  port: 8080,
+  port: 8081,
   async fetch(req) {
     const { pathname } = new URL(req.url);
     if (pathname === "/") {
@@ -29,7 +29,7 @@ const server = Bun.serve({
   },
 });
 
-console.log(`Listening on http://localhost:${server.port}...`);
+console.log(`API listening on port ${server.port}...`);
 
 async function getHostname() {
   const { stdout } = Bun.spawn(["hostname"]);

@@ -30,11 +30,11 @@ func main() {
 	r.HandleFunc("GET /", infoHandler)
 
 	server := http.Server{
-		Addr:    ":8081",
+		Addr:    ":8080",
 		Handler: r,
 	}
 
-	fmt.Println("API listening on port 8081...")
+	fmt.Println("API listening on port 8080...")
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Error starting server:", err)
 	}
@@ -50,26 +50,31 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 	hostname, err := getHostname()
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get hostname"})
+		return
 	}
 
 	uptime, err := getUptime()
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get uptime"})
+		return
 	}
 
 	diskInfo, err := getDiskInfo()
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get disk info"})
+		return
 	}
 
 	processes, err := getProcessInfo()
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get process info"})
+		return
 	}
 
 	service2Info, err := fetchService2Info()
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get service 2 info"})
+		return
 	}
 
 	writeJSON(w, http.StatusOK, Info{
@@ -140,7 +145,7 @@ func getProcessInfo() (string, error) {
 func fetchService2Info() (ServiceInfo, error) {
 	info := ServiceInfo{}
 
-	r, err := http.Get("http://localhost:8080")
+	r, err := http.Get("http://service-2:8081")
 	if err != nil {
 		return info, err
 	}
