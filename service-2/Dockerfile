@@ -9,5 +9,5 @@ RUN bun build index.ts --compile --outfile api
 FROM ubuntu:22.04
 WORKDIR /app
 COPY --from=build /app/api /app/api
-EXPOSE 8081/tcp
+EXPOSE 8081
 CMD ["/app/api"]

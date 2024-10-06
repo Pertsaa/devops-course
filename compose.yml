@@ -3,7 +3,6 @@ services:
     build:
       context: ./service-1
       dockerfile: Dockerfile
-    restart: always
     ports:
       - "8199:8080"
 
@@ -11,6 +10,5 @@ services:
     build:
       context: ./service-2
       dockerfile: Dockerfile
-    restart: always
     ports:
       - "8081"
