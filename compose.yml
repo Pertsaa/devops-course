@@ -3,9 +3,6 @@ services:
     build:
       context: ./service-1
       dockerfile: Dockerfile
-    depends_on:
-      pokkne-db:
-        condition: service_healthy
     restart: always
     ports:
       - "8199:8080"

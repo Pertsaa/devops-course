@@ -10,8 +10,13 @@ const server = Bun.serve({
         const hostname = await getHostname();
         const uptime = await getUptime();
         const diskInfo = await getDiskInfo();
-        const processes = await getProcessInfo();
-        return Response.json({ hostname, uptime, diskInfo, processes });
+        const processInfo = await getProcessInfo();
+        return Response.json({
+          hostname,
+          uptime,
+          disk_info: diskInfo,
+          process_info: processInfo,
+        });
       } catch (error) {
         console.error(error);
         return Response.json(

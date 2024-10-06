@@ -16,8 +16,8 @@ type Info struct {
 type ServiceInfo struct {
 	Hostname  string `json:"hostname"`
 	Uptime    string `json:"uptime"`
-	DiskInfo  string `json:"diskInfo"`
-	Processes string `json:"processes"`
+	DiskInfo  string `json:"disk_info"`
+	Processes string `json:"process_info"`
 }
 
 type Error struct {
@@ -67,6 +67,11 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get process info"})
 	}
 
+	service2Info, err := fetchService2Info()
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, Error{Error: "failed to get service 2 info"})
+	}
+
 	writeJSON(w, http.StatusOK, Info{
 		Service1: ServiceInfo{
 			Hostname:  hostname,
@@ -74,7 +79,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 			DiskInfo:  diskInfo,
 			Processes: processes,
 		},
-		Service2: ServiceInfo{},
+		Service2: service2Info,
 	})
 }
 
@@ -130,4 +135,21 @@ func getProcessInfo() (string, error) {
 
 	output := strings.ReplaceAll(strings.TrimSpace(string(stdout)), "\n", "")
 	return output, nil
+}
+
+func fetchService2Info() (ServiceInfo, error) {
+	info := ServiceInfo{}
+
+	r, err := http.Get("http://localhost:8080")
+	if err != nil {
+		return info, err
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&info)
+	if err != nil {
+		return info, err
+	}
+	defer r.Body.Close()
+
+	return info, nil
 }
