@@ -1,18 +1,13 @@
-# BUN DOCKER IMAGE https://hub.docker.com/r/oven/bun/tags
-
-FROM node:18-alpine AS builder
+FROM oven/bun AS build
 WORKDIR /app
-COPY package*.json .
-RUN npm ci
-COPY . .
-RUN npm run build
-RUN npm prune --production
-
-FROM node:18-alpine
-WORKDIR /app
-COPY --from=builder /app/build build/
-COPY --from=builder /app/node_modules node_modules/
+COPY bun.lockb .
 COPY package.json .
-EXPOSE 8081
-ENV NODE_ENV=production
-CMD ["node", "build"]
+RUN bun install --frozen-lockfile
+COPY . .
+RUN bun build index.ts --compile --outfile api
+
+FROM ubuntu:22.04
+WORKDIR /app
+COPY --from=build /app/api /app/api
+EXPOSE 8081/tcp
+CMD ["/app/api"]
