@@ -1,0 +1,8 @@
+The `hostname` command returns container ID instead of an ip address when ran inside the containers so host ip is not shared with the containers.
+
+The `uptime` command returns time in UTC so the system time is different inside the containers compared to host machine.
+
+The `ps -ax` command shows only service startup processes so none of the host processes are shared with the containers.
+
+The `df -h` command shows that services do not share the disks with the host system either. The available disk space is the amount allocated to docker hub. We could
+share some host volumes with the containers though if we specified the shared volumes inside the docker compose file.
