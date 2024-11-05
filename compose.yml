@@ -1,15 +1,17 @@
 services:
-  service-1:
-    build:
-      context: ./service-1
-      dockerfile: Dockerfile
+  nginx:
+    build: ./nginx
     depends_on:
-      service-2:
-        condition: service_started
+      - service-1
     ports:
-      - "8199:8080"
+      - "8198:80"
+
+  service-1:
+    build: ./service-1
+    depends_on:
+      - service-2
+    deploy:
+      replicas: 3
 
   service-2:
-    build:
-      context: ./service-2
-      dockerfile: Dockerfile
+    build: ./service-2

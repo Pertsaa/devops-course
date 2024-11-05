@@ -1,13 +1,16 @@
 docker container ls
 
-CONTAINER ID   IMAGE              COMMAND      CREATED          STATUS         PORTS                    NAMES
-d17ba8c46d6e   devops-service-1   "/app/api"   10 seconds ago   Up 9 seconds   0.0.0.0:8199->8080/tcp   devops-service-1-1
-107a1b9dbc79   devops-service-2   "/app/api"   10 seconds ago   Up 9 seconds   8081/tcp                 devops-service-2-1
+CONTAINER ID   IMAGE                     COMMAND                  CREATED         STATUS         PORTS                  NAMES
+dfdf229474cd   devops-course-nginx       "/docker-entrypoint.…"   6 seconds ago   Up 5 seconds   0.0.0.0:8198->80/tcp   devops-course-nginx-1
+43204544ebf9   devops-course-service-1   "/app/api"               6 seconds ago   Up 5 seconds   8080/tcp               devops-course-service-1-1
+fe70ac6d9961   devops-course-service-1   "/app/api"               6 seconds ago   Up 5 seconds   8080/tcp               devops-course-service-1-3
+77e6aaeb36f1   devops-course-service-1   "/app/api"               6 seconds ago   Up 5 seconds   8080/tcp               devops-course-service-1-2
+aa893a94635a   devops-course-service-2   "/app/api"               6 seconds ago   Up 5 seconds   8081/tcp               devops-course-service-2-1
 
 docker network ls
 
-NETWORK ID     NAME             DRIVER    SCOPE
-7f05ec08eaac   bridge           bridge    local
-c2cfa104ca7b   devops_default   bridge    local
-816917d1e27e   host             host      local
-b1c9014a79f4   none             null      local
+NETWORK ID     NAME                    DRIVER    SCOPE
+f5ad05d9ae30   bridge                  bridge    local
+4ee220b762dd   devops-course_default   bridge    local
+816917d1e27e   host                    host      local
+b1c9014a79f4   none                    null      local

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Service Data</title>
+
+	<script>
+		function init() {
+			const requestButton = document.querySelector("#request-button")
+			const stopButton = document.querySelector("#stop-button")
+			const textarea = document.querySelector("#service-data")
+
+			requestButton.addEventListener("click", async () => {
+				const res = await fetch('/api/')
+				if (res.ok) {
+					const data = await res.json()
+					textarea.value = JSON.stringify(data, undefined, 4);
+				}
+			})
+
+			stopButton.addEventListener("click", () => {
+				alert('Press ctrl+c on windows, cmd+c on macos! Tried a lot of things but there is no sensible way to make this happen with docker compose :(')
+			})
+		}
+	</script>
+
+	<style>
+		html {
+			margin: 0;
+			height: 100%;
+		}
+
+		body {
+			margin: 0;
+			padding: 1rem;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			overflow: hidden;
+		}
+
+		textarea {
+			min-height: 60vh;
+		}
+
+		.row {
+			display: flex;
+			gap: 1rem;
+		}
+	</style>
+</head>
+
+<body onload="init()">
+	<textarea id="service-data" name="service-data" disabled></textarea>
+	<div class="row">
+		<button id="request-button">REQUEST</button>
+		<button id="stop-button">STOP</button>
+	</div>
+</body>
+
+</html>

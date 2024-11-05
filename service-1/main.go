@@ -6,7 +6,27 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+	"sync"
+	"time"
 )
+
+var (
+	sleeping   bool
+	sleepingMx sync.Mutex
+)
+
+func setSleeping(state bool) {
+	sleepingMx.Lock()
+	sleeping = state
+	sleepingMx.Unlock()
+}
+
+func setSleepingAfter(state bool, after time.Duration) {
+	time.Sleep(after)
+	sleepingMx.Lock()
+	sleeping = state
+	sleepingMx.Unlock()
+}
 
 type Info struct {
 	Service1 ServiceInfo `json:"service_1"`
@@ -41,6 +61,13 @@ func main() {
 }
 
 func infoHandler(w http.ResponseWriter, r *http.Request) {
+	if sleeping {
+		w.WriteHeader(503)
+		return
+	}
+
+	setSleeping(true)
+
 	if r.URL.Path != "/" {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Not Found")
@@ -86,6 +113,8 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		},
 		Service2: service2Info,
 	})
+
+	go setSleepingAfter(false, 2*time.Second)
 }
 
 func writeJSON(w http.ResponseWriter, code int, data any) error {
